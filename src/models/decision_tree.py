@@ -2,7 +2,7 @@ import numpy as np
 from collections import Counter
 
 class DecisionTree:
-    def __init__(self, max_depth=5, min_samples_split=2, n_features=None):
+    def __init__(self, max_depth=5, min_samples_split=5, n_features=None):
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.n_features = n_features

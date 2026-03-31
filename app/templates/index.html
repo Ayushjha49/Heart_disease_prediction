@@ -252,6 +252,50 @@
             .submit-row        { flex-direction: column; }
             .disclaimer        { max-width: 100%; text-align: center; }
         }
+
+        /* Range slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(to right, var(--rose) 0%, var(--rose) var(--value), var(--border-strong) var(--value), var(--border-strong) 100%);
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--rose);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(192,97,74,0.3);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--rose);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(192,97,74,0.3);
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]::-moz-range-track {
+            background: transparent;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -304,10 +348,10 @@
                     <label>Chest Pain Type</label>
                     <select name="cp" required>
                         <option value="" disabled selected>Select</option>
+                        <option value="3">Asymptomatic</option>
                         <option value="0">Typical Angina</option>
                         <option value="1">Atypical Angina</option>
-                        <option value="2">Non-Anginal</option>
-                        <option value="3">Asymptomatic</option>
+                        <option value="2">Non-Anginal Pain</option>
                     </select>
                 </div>
             </div>
@@ -374,9 +418,9 @@
                     <label>ST Slope</label>
                     <select name="slope" required>
                         <option value="" disabled selected>Select</option>
-                        <option value="0">Downsloping</option>
+                        <option value="2">Downsloping</option>
                         <option value="1">Flat</option>
-                        <option value="2">Upsloping</option>
+                        <option value="0">Upsloping</option>
                     </select>
                 </div>
                 <div class="field">
@@ -395,10 +439,10 @@
                     <label>Thalassemia (Thal)</label>
                     <select name="thal" required>
                         <option value="" disabled selected>Select</option>
-                        <option value="0">Normal</option>
+                        <option value="3">Normal</option>
                         <option value="1">Fixed Defect</option>
                         <option value="2">Reversible Defect</option>
-                        <option value="3">Unknown</option>
+                        <option value="0">Unknown</option>
                     </select>
                 </div>
             </div>
@@ -413,10 +457,70 @@
 
     </div>
 
+    <div class="card" style="margin-top: 28px;">
+        <div class="card-header">
+            <span class="card-title">Model Evaluation</span>
+            <span class="badge">HYPERPARAMETER TUNING</span>
+        </div>
+
+        <div id="evaluate-tab">
+            <div style="padding: 28px 26px;">
+                <p class="section-label">Model Parameters</p>
+                <div class="fields-grid">
+                    <div class="field">
+                        <label>Number of Trees (n_estimators)</label>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="range" id="n_trees" name="n_trees" min="10" max="500" step="10" value="100" style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: var(--border-strong); cursor: pointer;">
+                            <span id="n_trees_value" style="font-family: 'DM Mono', monospace; font-weight: bold; color: var(--rose); min-width: 45px;">100</span>
+                        </div>
+                        <span class="hint">Trees influence model complexity</span>
+                    </div>
+                    <div class="field">
+                        <label>Maximum Tree Depth</label>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="range" id="max_depth" name="max_depth" min="2" max="20" step="1" value="5" style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: var(--border-strong); cursor: pointer;">
+                            <span id="max_depth_value" style="font-family: 'DM Mono', monospace; font-weight: bold; color: var(--rose); min-width: 25px;">5</span>
+                        </div>
+                        <span class="hint">Deeper trees can overfit</span>
+                    </div>
+                    <div class="field">
+                        <label>Min Samples Split</label>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="range" id="min_samples_split" name="min_samples_split" min="2" max="50" step="1" value="2" style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: var(--border-strong); cursor: pointer;">
+                            <span id="min_samples_split_value" style="font-family: 'DM Mono', monospace; font-weight: bold; color: var(--rose); min-width: 25px;">2</span>
+                        </div>
+                        <span class="hint">Higher values reduce overfitting</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; gap: 12px;">
+                    <button type="button" id="evaluate-btn" style="background: var(--rose); color: #fff; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; border: none; border-radius: 12px; padding: 12px 24px; cursor: pointer; transition: 0.2s;">
+                        Evaluate Model
+                    </button>
+                    <button type="button" id="compare-btn" style="background: var(--brown-mid); color: #fff; font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; border: none; border-radius: 12px; padding: 12px 24px; cursor: pointer; transition: 0.2s;">
+                        Compare Parameters
+                    </button>
+                </div>
+
+                <!-- Metrics Display -->
+                <div id="metrics-container" style="margin-top: 28px;"></div>
+
+                <!-- Charts -->
+                <div id="charts-container" style="margin-top: 28px; overflow-y: auto; max-height: none;"></div>
+            </div>
+        </div>
+
+    </div>
+
     <footer>CardioScan &middot; Random Forest from Scratch &middot; Kaggle Heart Disease Dataset</footer>
 
 </div>
+
+<!-- Plotly for charting -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 <script>
+    // Prediction form handler
     document.getElementById('predict-form').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -472,6 +576,260 @@
             btn.textContent = 'Run Prediction';
         }
     });
+
+    // Update slider displays
+    const sliders = {
+        'n_trees': document.getElementById('n_trees'),
+        'max_depth': document.getElementById('max_depth'),
+        'min_samples_split': document.getElementById('min_samples_split')
+    };
+
+    Object.entries(sliders).forEach(([key, slider]) => {
+        if (slider) {
+            slider.addEventListener('input', function() {
+                document.getElementById(key + '_value').textContent = this.value;
+            });
+        }
+    });
+
+    // Evaluate Model Handler
+    document.getElementById('evaluate-btn').addEventListener('click', async function() {
+        const n_trees = parseInt(document.getElementById('n_trees').value);
+        const max_depth = parseInt(document.getElementById('max_depth').value);
+        const min_samples_split = parseInt(document.getElementById('min_samples_split').value);
+
+        const metricsContainer = document.getElementById('metrics-container');
+        const chartsContainer = document.getElementById('charts-container');
+
+        metricsContainer.innerHTML = '<p style="text-align: center; color: var(--brown-light);">Evaluating model... This may take a moment.</p>';
+        chartsContainer.innerHTML = '';
+
+        try {
+            const response = await fetch('/evaluate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ n_trees, max_depth, min_samples_split })
+            });
+
+            if (!response.ok) throw new Error('Evaluation failed');
+            const result = await response.json();
+
+            if (result.error) {
+                metricsContainer.innerHTML = `<p style="color: var(--rose);">Error: ${result.error}</p>`;
+                return;
+            }
+
+            // Display metrics
+            const metrics = result.metrics;
+            const metricsHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">Accuracy</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--rose);">${(metrics.accuracy * 100).toFixed(2)}%</p>
+                    </div>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">Precision</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--green);">${(metrics.precision * 100).toFixed(2)}%</p>
+                    </div>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">Recall</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #f39c12;">${(metrics.recall * 100).toFixed(2)}%</p>
+                    </div>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">F1-Score</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #e74c3c;">${(metrics.f1_score * 100).toFixed(2)}%</p>
+                    </div>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">Specificity</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #3498db;">${(metrics.specificity * 100).toFixed(2)}%</p>
+                    </div>
+                    <div style="background: var(--cream); padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-strong); text-align: center;">
+                        <p style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 8px;">ROC-AUC</p>
+                        <p style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #9b59b6;">${(metrics.roc_auc * 100).toFixed(2)}%</p>
+                    </div>
+                </div>
+            `;
+            metricsContainer.innerHTML = metricsHTML;
+
+            // Display Confusion Matrix (as image)
+            if (result.confusion_matrix_image) {
+                const confusionDiv = document.createElement('div');
+                confusionDiv.id = 'confusion-chart';
+                confusionDiv.style.marginBottom = '28px';
+                confusionDiv.style.textAlign = 'center';
+                
+                const img = document.createElement('img');
+                img.src = result.confusion_matrix_image;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.borderRadius = '12px';
+                
+                confusionDiv.appendChild(img);
+                chartsContainer.appendChild(confusionDiv);
+            }
+
+            // Display all metrics comparison
+            const metricsTrace = {
+                x: ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'Sensitivity', 'Specificity', 'ROC-AUC'],
+                y: [metrics.accuracy, metrics.precision, metrics.recall, metrics.f1_score, metrics.sensitivity, metrics.specificity, metrics.roc_auc],
+                type: 'bar',
+                marker: { color: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22'] }
+            };
+
+            const metricsLayout = {
+                title: 'Model Performance Metrics',
+                xaxis: { title: 'Metric', tickangle: -45 },
+                yaxis: { title: 'Score', range: [0, 1] },
+                height: 450,
+                margin: { l: 60, r: 40, t: 80, b: 100 },
+                bargap: 0.1
+            };
+
+            const metricsDiv = document.createElement('div');
+            metricsDiv.id = 'metrics-chart';
+            chartsContainer.appendChild(metricsDiv);
+            Plotly.newPlot('metrics-chart', [metricsTrace], metricsLayout, { responsive: true });
+
+        } catch (err) {
+            metricsContainer.innerHTML = `<p style="color: var(--rose);">Error: ${err.message}</p>`;
+        }
+    });
+
+    // Compare Parameters Handler
+    document.getElementById('compare-btn').addEventListener('click', async function() {
+        const n_trees = parseInt(document.getElementById('n_trees').value);
+        const max_depth = parseInt(document.getElementById('max_depth').value);
+        const min_samples_split = parseInt(document.getElementById('min_samples_split').value);
+
+        const chartsContainer = document.getElementById('charts-container');
+        const metricsContainer = document.getElementById('metrics-container');
+
+        metricsContainer.innerHTML = '<p style="text-align: center; color: var(--brown-light);">Comparing parameters... This may take a moment.</p>';
+        chartsContainer.innerHTML = '';
+
+        try {
+            // Evaluate n_trees range
+            const n_trees_response = await fetch('/evaluate-param-range', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    param_name: 'n_trees',
+                    param_range: [10, 50, 100, 200, 300, 400, 500],
+                    base_params: { n_trees: 100, max_depth: max_depth, min_samples_split: min_samples_split }
+                })
+            });
+
+            const n_trees_data = await n_trees_response.json();
+
+            // Evaluate max_depth range
+            const max_depth_response = await fetch('/evaluate-param-range', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    param_name: 'max_depth',
+                    param_range: [2, 4, 6, 8, 10, 12, 15, 20],
+                    base_params: { n_trees: n_trees, max_depth: 5, min_samples_split: min_samples_split }
+                })
+            });
+
+            const max_depth_data = await max_depth_response.json();
+
+            // Evaluate min_samples_split range
+            const min_samples_response = await fetch('/evaluate-param-range', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    param_name: 'min_samples_split',
+                    param_range: [2, 5, 10, 20, 30, 40, 50],
+                    base_params: { n_trees: n_trees, max_depth: max_depth, min_samples_split: 2 }
+                })
+            });
+
+            const min_samples_data = await min_samples_response.json();
+
+            metricsContainer.innerHTML = '';
+
+            // Plot n_trees comparison
+            const n_trees_trace = {
+                x: n_trees_data.results.map(r => r.n_trees),
+                y: n_trees_data.results.map(r => r.accuracy),
+                mode: 'lines+markers',
+                name: 'Accuracy',
+                line: { color: '#c0614a', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const n_trees_layout = {
+                title: 'Model Performance vs Number of Trees',
+                xaxis: { title: 'Number of Trees (n_estimators)' },
+                yaxis: { title: 'Accuracy', range: [0, 1] },
+                height: 450,
+                margin: { l: 60, r: 40, t: 80, b: 80 },
+                hovermode: 'x unified'
+            };
+
+            const n_trees_div = document.createElement('div');
+            n_trees_div.id = 'n_trees-chart';
+            n_trees_div.style.marginBottom = '28px';
+            chartsContainer.appendChild(n_trees_div);
+            Plotly.newPlot('n_trees-chart', [n_trees_trace], n_trees_layout, { responsive: true });
+
+            // Plot max_depth comparison
+            const max_depth_trace = {
+                x: max_depth_data.results.map(r => r.max_depth),
+                y: max_depth_data.results.map(r => r.accuracy),
+                mode: 'lines+markers',
+                name: 'Accuracy',
+                line: { color: '#4a8a5a', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const max_depth_layout = {
+                title: 'Model Performance vs Maximum Tree Depth',
+                xaxis: { title: 'Maximum Depth' },
+                yaxis: { title: 'Accuracy', range: [0, 1] },
+                height: 450,
+                margin: { l: 60, r: 40, t: 80, b: 80 },
+                hovermode: 'x unified'
+            };
+
+            const max_depth_div = document.createElement('div');
+            max_depth_div.id = 'max_depth-chart';
+            max_depth_div.style.marginBottom = '28px';
+            chartsContainer.appendChild(max_depth_div);
+            Plotly.newPlot('max_depth-chart', [max_depth_trace], max_depth_layout, { responsive: true });
+
+            // Plot min_samples_split comparison
+            const min_samples_trace = {
+                x: min_samples_data.results.map(r => r.min_samples_split),
+                y: min_samples_data.results.map(r => r.accuracy),
+                mode: 'lines+markers',
+                name: 'Accuracy',
+                line: { color: '#a0846a', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const min_samples_layout = {
+                title: 'Model Performance vs Min Samples Split',
+                xaxis: { title: 'Minimum Samples Split' },
+                yaxis: { title: 'Accuracy', range: [0, 1] },
+                height: 450,
+                margin: { l: 60, r: 40, t: 80, b: 80 },
+                hovermode: 'x unified'
+            };
+
+            const min_samples_div = document.createElement('div');
+            min_samples_div.id = 'min_samples-chart';
+            min_samples_div.style.marginBottom = '28px';
+            chartsContainer.appendChild(min_samples_div);
+            Plotly.newPlot('min_samples-chart', [min_samples_trace], min_samples_layout, { responsive: true });
+
+        } catch (err) {
+            metricsContainer.innerHTML = `<p style="color: var(--rose);">Error: ${err.message}</p>`;
+            console.error('Error details:', err);
+        }
+    });
 </script>
 </body>
 </html>
+

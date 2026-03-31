@@ -34,7 +34,7 @@ class RandomForest:
     def predict(self, X):
         tree_preds = np.array([tree.predict(X) for tree in self.trees])
 
-        # majority voting
+
         tree_preds = np.swapaxes(tree_preds, 0, 1)
         return np.array([self._most_common_label(pred) for pred in tree_preds])
 
@@ -45,5 +45,5 @@ class RandomForest:
         """
         Returns the accuracy of the model on given data.
         """
-        y_pred = self.predict(X)  # use your custom predict
+        y_pred = self.predict(X)  
         return accuracy_score(y, y_pred)

@@ -33,5 +33,5 @@ def predict(input_data):
 
 
 if __name__ == "__main__":
-    sample = [40, 1, 1, 140, 289, 0, 0, 172, 0, 0.0, 2]
+    sample = [40, 1, 1, 140, 289, 0, 0, 172, 0, 0.0, 2,3,0]
     print(predict(sample))
