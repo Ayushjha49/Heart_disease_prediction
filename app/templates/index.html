@@ -752,17 +752,17 @@
             // Plot n_trees comparison
             const n_trees_trace = {
                 x: n_trees_data.results.map(r => r.n_trees),
-                y: n_trees_data.results.map(r => r.accuracy),
+                y: n_trees_data.results.map(r => r.recall),
                 mode: 'lines+markers',
-                name: 'Accuracy',
+                name: 'Recall',
                 line: { color: '#c0614a', width: 3 },
                 marker: { size: 8 }
             };
 
             const n_trees_layout = {
-                title: 'Model Performance vs Number of Trees',
+                title: 'Recall vs Number of Trees',
                 xaxis: { title: 'Number of Trees (n_estimators)' },
-                yaxis: { title: 'Accuracy', range: [0, 1] },
+                yaxis: { title: 'Recall', range: [0, 1.05] },
                 height: 450,
                 margin: { l: 60, r: 40, t: 80, b: 80 },
                 hovermode: 'x unified'
@@ -777,19 +777,19 @@
             // Plot max_depth comparison
             const max_depth_trace = {
                 x: max_depth_data.results.map(r => r.max_depth),
-                y: max_depth_data.results.map(r => r.accuracy),
+                y: max_depth_data.results.map(r => r.recall),
                 mode: 'lines+markers',
-                name: 'Accuracy',
+                name: 'Recall',
                 line: { color: '#4a8a5a', width: 3 },
                 marker: { size: 8 }
             };
 
             const max_depth_layout = {
-                title: 'Model Performance vs Maximum Tree Depth',
+                title: 'Recall vs Maximum Tree Depth',
                 xaxis: { title: 'Maximum Depth' },
-                yaxis: { title: 'Accuracy', range: [0, 1] },
-                height: 450,
-                margin: { l: 60, r: 40, t: 80, b: 80 },
+                yaxis: { title: 'Recall', range: [0, 1.05] },
+                height: 520,
+                margin: { l: 70, r: 50, t: 100, b: 100 },
                 hovermode: 'x unified'
             };
 
@@ -802,17 +802,17 @@
             // Plot min_samples_split comparison
             const min_samples_trace = {
                 x: min_samples_data.results.map(r => r.min_samples_split),
-                y: min_samples_data.results.map(r => r.accuracy),
+                y: min_samples_data.results.map(r => r.recall),
                 mode: 'lines+markers',
-                name: 'Accuracy',
+                name: 'Recall',
                 line: { color: '#a0846a', width: 3 },
                 marker: { size: 8 }
             };
 
             const min_samples_layout = {
-                title: 'Model Performance vs Min Samples Split',
+                title: 'Recall vs Min Samples Split',
                 xaxis: { title: 'Minimum Samples Split' },
-                yaxis: { title: 'Accuracy', range: [0, 1] },
+                yaxis: { title: 'Recall', range: [0, 1] },
                 height: 450,
                 margin: { l: 60, r: 40, t: 80, b: 80 },
                 hovermode: 'x unified'
